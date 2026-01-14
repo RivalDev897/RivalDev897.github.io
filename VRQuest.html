@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VRHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+
+        :root {
+            --primary: #8B5CF6;
+            --primary-dark: #7C3AED;
+            --primary-light: #A78BFA;
+            --secondary: #10B981;
+            --secondary-dark: #059669;
+            --danger: #EF4444;
+            --danger-dark: #DC2626;
+            --warning: #F59E0B;
+            --dark: #1F2937;
+            --darker: #111827;
+            --light: #F9FAFB;
+            --gray: #6B7280;
+            --gray-light: #E5E7EB;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+            --radius: 12px;
+            --radius-lg: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: var(--light);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        header {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.25rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after,
+        nav a.active::after {
+            width: 100%;
+        }
+
+        nav a:hover {
+            color: var(--primary-light);
+        }
+
+        nav a.active {
+            color: var(--primary);
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.75rem 1.75rem;
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--light);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--light) 0%, var(--primary-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--gray-light);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+        }
+
+        .tabs-container {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-lg);
+            padding: 0.5rem;
+            margin-bottom: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 1rem 2rem;
+            background: transparent;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-light);
+            cursor: pointer;
+            border-radius: 8px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .tab.active {
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--primary-light);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+        }
+
+        .upload-form-container {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: none;
+        }
+
+        .upload-form-container.active {
+            display: block;
+        }
+
+        .form-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--light);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .form-title i {
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 1.75rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            color: var(--light);
+            font-size: 0.95rem;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: rgba(15, 23, 42, 0.7);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            color: var(--light);
+            transition: var(--transition);
+        }
+
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+        }
+
+        .form-group textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        .file-upload {
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius);
+            padding: 2.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            background: rgba(15, 23, 42, 0.5);
+            position: relative;
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary);
+            background: rgba(139, 92, 246, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .file-upload i {
+            font-size: 3.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.75rem;
+        }
+
+        .games-container {
+            display: none;
+        }
+
+        .games-container.active {
+            display: block;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 5rem 2rem;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: var(--radius-lg);
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .empty-state h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--light);
+        }
+
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .game-card {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.8));
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        .game-image {
+            height: 200px;
+            width: 100%;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .game-content {
+            padding: 1.75rem;
+        }
+
+        .game-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--light);
+        }
+
+        .game-developer {
+            color: var(--primary-light);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .game-description {
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            color: var(--gray-light);
+            line-height: 1.6;
+        }
+
+        .game-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .game-category {
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--primary-light);
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .download-btn {
+            width: 100%;
+            padding: 0.9rem;
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .status-message {
+            padding: 1.25rem 1.5rem;
+            border-radius: var(--radius);
+            margin-bottom: 2rem;
+            display: none;
+            border-left: 4px solid transparent;
+        }
+
+        .status-message.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10B981;
+            border-color: #10B981;
+            display: block;
+        }
+
+        .status-message.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+            border-color: #EF4444;
+            display: block;
+        }
+
+        .admin-panel {
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin-bottom: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: none;
+        }
+
+        .admin-panel.active {
+            display: block;
+        }
+
+        .admin-controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .pending-game {
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: var(--radius-lg);
+            min-width: 150px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        footer {
+            background: rgba(15, 23, 42, 0.95);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 4rem 2rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .file-info {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: var(--radius);
+            border-left: 3px solid var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1.5rem;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tab {
+                padding: 0.8rem 1rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <i class="fas fa-vr-cardboard"></i>
+                <span>VRHub</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active" id="browse-link"><i class="fas fa-gamepad"></i> Browse</a></li>
+                    <li><a href="#" id="upload-link"><i class="fas fa-upload"></i> Upload</a></li>
+                    <li><a href="#" id="admin-link" style="display: none;"><i class="fas fa-shield-alt"></i> Admin</a></li>
+                </ul>
+            </nav>
+            <div class="user-actions">
+                <button class="btn btn-outline" id="admin-login-btn">
+                    <i class="fas fa-shield-alt"></i> Admin
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>VRHub</h1>
+            <p>Share your VR creations</p>
+            <button class="btn btn-primary" id="hero-upload-btn">
+                <i class="fas fa-cloud-upload-alt"></i> Upload
+            </button>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="total-games">0</div>
+                    <div class="stat-label">Games</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="total-pending">0</div>
+                    <div class="stat-label">Pending</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="total-downloads">0</div>
+                    <div class="stat-label">Downloads</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="tabs-container">
+            <div class="tabs">
+                <button class="tab active" id="browse-tab">
+                    <i class="fas fa-gamepad"></i> Games
+                </button>
+                <button class="tab" id="upload-tab">
+                    <i class="fas fa-upload"></i> Upload
+                </button>
+                <button class="tab" id="admin-tab" style="display: none;">
+                    <i class="fas fa-shield-alt"></i> Admin
+                </button>
+            </div>
+        </div>
+
+        <div id="status-message" class="status-message"></div>
+
+        <section class="upload-form-container" id="upload-form">
+            <h2 class="form-title"><i class="fas fa-cloud-upload-alt"></i> Upload Game</h2>
+            
+            <form id="game-upload-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="game-title">Game Title</label>
+                        <input type="text" id="game-title" placeholder="Enter game title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="developer-name">Developer</label>
+                        <input type="text" id="developer-name" placeholder="Your name or studio" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="game-category">Category</label>
+                        <select id="game-category" required>
+                            <option value="">Select category</option>
+                            <option value="Action">Action</option>
+                            <option value="Adventure">Adventure</option>
+                            <option value="Puzzle">Puzzle</option>
+                            <option value="Horror">Horror</option>
+                            <option value="Simulation">Simulation</option>
+                            <option value="Multiplayer">Multiplayer</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="game-size">Size (MB)</label>
+                        <input type="number" id="game-size" placeholder="e.g., 250" min="1" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="game-description">Description</label>
+                    <textarea id="game-description" placeholder="Describe your game..." required></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="game-version">Version</label>
+                        <input type="text" id="game-version" placeholder="e.g., 1.0.0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contact-email">Email</label>
+                        <input type="email" id="contact-email" placeholder="you@example.com" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>APK File</label>
+                    <div class="file-upload" id="apk-upload-area">
+                        <i class="fas fa-file-archive"></i>
+                        <p id="apk-upload-text">Select APK file</p>
+                        <span>APK files only</span>
+                        <input type="file" id="apk-file" accept=".apk" required>
+                    </div>
+                    <div id="apk-file-info" class="file-info" style="display: none;">
+                        <p><strong>File:</strong> <span id="apk-file-name"></span></p>
+                        <p><strong>Size:</strong> <span id="apk-file-size"></span> MB</p>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 3rem;">
+                    <button type="submit" class="btn btn-primary" style="padding: 1rem 3rem;">
+                        <i class="fas fa-paper-plane"></i> Submit
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <section class="games-container active" id="games-container">
+            <div class="section-title">
+                <h2><i class="fas fa-gamepad"></i> Games</h2>
+                <div>
+                    <select id="sort-games" style="padding: 0.75rem 1.25rem; border-radius: var(--radius); background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); color: var(--light);">
+                        <option value="newest">Newest</option>
+                        <option value="oldest">Oldest</option>
+                        <option value="name">Name</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="games-content">
+                <div class="empty-state" id="empty-state">
+                    <i class="fas fa-gamepad"></i>
+                    <h3>No Games</h3>
+                    <p>Upload the first game</p>
+                    <button class="btn btn-primary" id="empty-upload-btn">
+                        <i class="fas fa-upload"></i> Upload
+                    </button>
+                </div>
+                
+                <div class="games-grid" id="games-grid" style="display: none;"></div>
+            </div>
+        </section>
+
+        <section class="admin-panel" id="admin-panel">
+            <h2 class="form-title"><i class="fas fa-shield-alt"></i> Admin</h2>
+            
+            <div class="admin-controls">
+                <input type="password" id="admin-password" placeholder="Password" style="flex: 1; padding: 1rem;">
+                <button class="btn btn-secondary" id="admin-login">Login</button>
+            </div>
+            
+            <div id="admin-content" style="margin-top: 2rem; display: none;">
+                <div style="background: rgba(245, 158, 11, 0.1); border-radius: var(--radius); padding: 1rem; margin-bottom: 2rem;">
+                    <h3 style="color: #F59E0B; margin-bottom: 0.5rem;"><i class="fas fa-clock"></i> Pending</h3>
+                    <div id="pending-games-list"></div>
+                </div>
+                
+                <div style="background: rgba(16, 185, 129, 0.1); border-radius: var(--radius); padding: 1rem;">
+                    <h3 style="color: #10B981; margin-bottom: 0.5rem;"><i class="fas fa-check-circle"></i> Approved</h3>
+                    <div id="approved-games-list"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>VRHub</h3>
+                <p>Share VR games</p>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2026 VRHub
+        </div>
+    </footer>
+
+    <script>
+        const ADMIN_PASSWORD = 'adminaccesspass32953%#';
+        
+        let approvedGames = [];
+        let pendingGames = [];
+        let isAdmin = false;
+
+        const browseTab = document.getElementById('browse-tab');
+        const uploadTab = document.getElementById('upload-tab');
+        const adminTab = document.getElementById('admin-tab');
+        const browseLink = document.getElementById('browse-link');
+        const uploadLink = document.getElementById('upload-link');
+        const adminLink = document.getElementById('admin-link');
+        const uploadForm = document.getElementById('upload-form');
+        const gamesContainer = document.getElementById('games-container');
+        const adminPanel = document.getElementById('admin-panel');
+        const statusMessage = document.getElementById('status-message');
+        const gameUploadForm = document.getElementById('game-upload-form');
+        const gamesGrid = document.getElementById('games-grid');
+        const emptyState = document.getElementById('empty-state');
+        const adminContent = document.getElementById('admin-content');
+        const pendingGamesList = document.getElementById('pending-games-list');
+        const approvedGamesList = document.getElementById('approved-games-list');
+        const adminPasswordInput = document.getElementById('admin-password');
+        const adminLoginBtn = document.getElementById('admin-login');
+        const totalGamesEl = document.getElementById('total-games');
+        const totalPendingEl = document.getElementById('total-pending');
+        const totalDownloadsEl = document.getElementById('total-downloads');
+        const heroUploadBtn = document.getElementById('hero-upload-btn');
+        const emptyUploadBtn = document.getElementById('empty-upload-btn');
+        const sortGames = document.getElementById('sort-games');
+        const apkFileInput = document.getElementById('apk-file');
+        const apkUploadText = document.getElementById('apk-upload-text');
+        const apkFileInfo = document.getElementById('apk-file-info');
+        const apkFileName = document.getElementById('apk-file-name');
+        const apkFileSize = document.getElementById('apk-file-size');
+        const adminLoginBtnHeader = document.getElementById('admin-login-btn');
+
+        function showStatus(message, type) {
+            statusMessage.textContent = message;
+            statusMessage.className = `status-message ${type}`;
+            
+            setTimeout(() => {
+                statusMessage.className = 'status-message';
+            }, 5000);
+        }
+
+        function saveToStorage() {
+            localStorage.setItem('vrhub-approved', JSON.stringify(approvedGames));
+            localStorage.setItem('vrhub-pending', JSON.stringify(pendingGames));
+        }
+
+        function loadFromStorage() {
+            approvedGames = JSON.parse(localStorage.getItem('vrhub-approved')) || [];
+            pendingGames = JSON.parse(localStorage.getItem('vrhub-pending')) || [];
+            updateUI();
+        }
+
+        function updateUI() {
+            updateStats();
+            displayApprovedGames();
+            if (isAdmin) {
+                displayAdminPanel();
+            }
+        }
+
+        function updateStats() {
+            totalGamesEl.textContent = approvedGames.length;
+            totalPendingEl.textContent = pendingGames.length;
+            
+            const totalDownloads = approvedGames.reduce((sum, game) => sum + (game.downloads || 0), 0);
+            totalDownloadsEl.textContent = totalDownloads;
+        }
+
+        function switchToBrowse() {
+            browseTab.classList.add('active');
+            uploadTab.classList.remove('active');
+            adminTab.classList.remove('active');
+            browseLink.classList.add('active');
+            uploadLink.classList.remove('active');
+            if (adminLink) adminLink.classList.remove('active');
+            gamesContainer.classList.add('active');
+            uploadForm.classList.remove('active');
+            adminPanel.classList.remove('active');
+            loadFromStorage();
+        }
+
+        function switchToUpload() {
+            uploadTab.classList.add('active');
+            browseTab.classList.remove('active');
+            adminTab.classList.remove('active');
+            uploadLink.classList.add('active');
+            browseLink.classList.remove('active');
+            if (adminLink) adminLink.classList.remove('active');
+            uploadForm.classList.add('active');
+            gamesContainer.classList.remove('active');
+            adminPanel.classList.remove('active');
+        }
+
+        function switchToAdmin() {
+            adminTab.classList.add('active');
+            browseTab.classList.remove('active');
+            uploadTab.classList.remove('active');
+            if (adminLink) adminLink.classList.add('active');
+            browseLink.classList.remove('active');
+            uploadLink.classList.remove('active');
+            adminPanel.classList.add('active');
+            gamesContainer.classList.remove('active');
+            uploadForm.classList.remove('active');
+            if (isAdmin) {
+                displayAdminPanel();
+            }
+        }
+
+        browseTab.addEventListener('click', switchToBrowse);
+        browseLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            switchToBrowse();
+        });
+
+        uploadTab.addEventListener('click', switchToUpload);
+        uploadLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            switchToUpload();
+        });
+
+        if (adminTab) {
+            adminTab.addEventListener('click', switchToAdmin);
+        }
+
+        heroUploadBtn.addEventListener('click', switchToUpload);
+        emptyUploadBtn.addEventListener('click', switchToUpload);
+        adminLoginBtnHeader.addEventListener('click', switchToAdmin);
+
+        apkFileInput.addEventListener('change', function(e) {
+            if (this.files && this.files[0]) {
+                const file = this.files[0];
+                
+                if (!file.name.toLowerCase().endsWith('.apk')) {
+                    showStatus('Please select an APK file', 'error');
+                    this.value = '';
+                    apkUploadText.textContent = 'Select APK file';
+                    apkFileInfo.style.display = 'none';
+                    return;
+                }
+                
+                const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                
+                if (fileSizeMB > 500) {
+                    showStatus('File too large. Maximum size is 500MB', 'error');
+                    this.value = '';
+                    apkUploadText.textContent = 'Select APK file';
+                    apkFileInfo.style.display = 'none';
+                    return;
+                }
+                
+                apkFileName.textContent = file.name;
+                apkFileSize.textContent = fileSizeMB;
+                apkUploadText.textContent = 'File selected';
+                apkFileInfo.style.display = 'block';
+                
+                document.getElementById('game-size').value = Math.ceil(fileSizeMB);
+            }
+        });
+
+        gameUploadForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const apkFile = apkFileInput.files[0];
+            if (!apkFile) {
+                showStatus('Select an APK file', 'error');
+                return;
+            }
+            
+            const gameData = {
+                id: 'pending_' + Date.now(),
+                title: document.getElementById('game-title').value.trim(),
+                developer: document.getElementById('developer-name').value.trim(),
+                category: document.getElementById('game-category').value,
+                size: document.getElementById('game-size').value,
+                version: document.getElementById('game-version').value.trim(),
+                description: document.getElementById('game-description').value.trim(),
+                email: document.getElementById('contact-email').value.trim(),
+                fileName: apkFile.name,
+                fileSize: (apkFile.size / (1024 * 1024)).toFixed(2),
+                dateSubmitted: new Date().toISOString(),
+                status: 'pending'
+            };
+            
+            if (!gameData.title || !gameData.developer) {
+                showStatus('Fill in required fields', 'error');
+                return;
+            }
+            
+            pendingGames.push(gameData);
+            saveToStorage();
+            
+            showStatus('Game submitted', 'success');
+            
+            gameUploadForm.reset();
+            apkUploadText.textContent = 'Select APK file';
+            apkFileInfo.style.display = 'none';
+            
+            setTimeout(() => switchToBrowse(), 1000);
+        });
+
+        function displayApprovedGames() {
+            if (approvedGames.length === 0) {
+                emptyState.style.display = 'block';
+                gamesGrid.style.display = 'none';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            gamesGrid.style.display = 'grid';
+            gamesGrid.innerHTML = '';
+            
+            let sortedGames = [...approvedGames];
+            const sortBy = sortGames.value;
+            
+            if (sortBy === 'newest') {
+                sortedGames.sort((a, b) => new Date(b.dateApproved) - new Date(a.dateApproved));
+            } else if (sortBy === 'oldest') {
+                sortedGames.sort((a, b) => new Date(a.dateApproved) - new Date(b.dateApproved));
+            } else if (sortBy === 'name') {
+                sortedGames.sort((a, b) => a.title.localeCompare(b.title));
+            }
+            
+            sortedGames.forEach(game => {
+                const gameCard = document.createElement('div');
+                gameCard.className = 'game-card';
+                gameCard.innerHTML = `
+                    <div class="game-image">
+                        <i class="fas fa-vr-cardboard" style="font-size: 3rem; color: rgba(255,255,255,0.3);"></i>
+                        <div class="game-badge">${game.category}</div>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">${game.title}</h3>
+                        <p class="game-developer">By ${game.developer}</p>
+                        <p class="game-description">${game.description}</p>
+                        <div class="game-meta">
+                            <span class="game-category">${game.category}</span>
+                            <span style="color: var(--gray-light);">${game.size} MB</span>
+                        </div>
+                        <button class="download-btn" onclick="downloadGame('${game.id}')">
+                            <i class="fas fa-download"></i> Download (${game.downloads || 0})
+                        </button>
+                    </div>
+                `;
+                gamesGrid.appendChild(gameCard);
+            });
+        }
+
+        window.downloadGame = function(gameId) {
+            const game = approvedGames.find(g => g.id === gameId);
+            
+            if (!game) {
+                showStatus('Game not found', 'error');
+                return;
+            }
+            
+            showStatus(`Downloading: ${game.title}`, 'success');
+            
+            game.downloads = (game.downloads || 0) + 1;
+            saveToStorage();
+            updateStats();
+            
+            setTimeout(() => {
+                const content = `APK File: ${game.title}\nVersion: ${game.version}\nSize: ${game.size}MB`;
+                const blob = new Blob([content], { type: 'application/vnd.android.package-archive' });
+                const url = URL.createObjectURL(blob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `${game.title.replace(/[^a-z0-9]/gi, '_')}.apk`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            }, 500);
+        };
+
+        adminLoginBtn.addEventListener('click', () => {
+            const password = adminPasswordInput.value;
+            if (password === ADMIN_PASSWORD) {
+                isAdmin = true;
+                adminTab.style.display = 'flex';
+                adminLink.style.display = 'flex';
+                adminContent.style.display = 'block';
+                adminPasswordInput.value = '';
+                showStatus('Logged in', 'success');
+                displayAdminPanel();
+            } else {
+                showStatus('Wrong password', 'error');
+            }
+        });
+
+        function displayAdminPanel() {
+            if (!isAdmin) return;
+            
+            if (pendingGames.length === 0) {
+                pendingGamesList.innerHTML = '<p style="color: var(--gray-light); padding: 1rem;">No pending games</p>';
+            } else {
+                let html = '';
+                pendingGames.forEach(game => {
+                    html += `
+                        <div class="pending-game">
+                            <h4>${game.title}</h4>
+                            <p>${game.developer} • ${game.fileSize}MB</p>
+                            <div style="margin-top: 1rem;">
+                                <button class="btn btn-secondary" onclick="approveGame('${game.id}')">
+                                    Approve
+                                </button>
+                                <button class="btn btn-outline" onclick="rejectGame('${game.id}')" style="margin-left: 0.5rem;">
+                                    Reject
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                pendingGamesList.innerHTML = html;
+            }
+            
+            if (approvedGames.length === 0) {
+                approvedGamesList.innerHTML = '<p style="color: var(--gray-light); padding: 1rem;">No approved games</p>';
+            } else {
+                let html = '';
+                approvedGames.forEach(game => {
+                    html += `
+                        <div style="padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                            <div style="display: flex; justify-content: space-between;">
+                                <div>
+                                    <strong>${game.title}</strong>
+                                    <p style="color: var(--gray-light); font-size: 0.9rem;">${game.downloads || 0} downloads</p>
+                                </div>
+                                <button class="btn btn-outline" onclick="removeGame('${game.id}')" style="padding: 0.3rem 0.8rem;">
+                                    Remove
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                approvedGamesList.innerHTML = html;
+            }
+        }
+
+        window.approveGame = function(gameId) {
+            const pendingIndex = pendingGames.findIndex(g => g.id === gameId);
+            if (pendingIndex === -1) return;
+            
+            const game = pendingGames[pendingIndex];
+            
+            const approvedGame = {
+                ...game,
+                id: 'approved_' + Date.now(),
+                dateApproved: new Date().toISOString(),
+                downloads: 0
+            };
+            
+            pendingGames.splice(pendingIndex, 1);
+            approvedGames.push(approvedGame);
+            saveToStorage();
+            
+            showStatus(`Approved: ${game.title}`, 'success');
+            updateUI();
+        };
+
+        window.rejectGame = function(gameId) {
+            const pendingIndex = pendingGames.findIndex(g => g.id === gameId);
+            if (pendingIndex === -1) return;
+            
+            const game = pendingGames[pendingIndex];
+            pendingGames.splice(pendingIndex, 1);
+            saveToStorage();
+            
+            showStatus(`Rejected: ${game.title}`, 'error');
+            updateUI();
+        };
+
+        window.removeGame = function(gameId) {
+            const approvedIndex = approvedGames.findIndex(g => g.id === gameId);
+            if (approvedIndex === -1) return;
+            
+            const game = approvedGames[approvedIndex];
+            approvedGames.splice(approvedIndex, 1);
+            saveToStorage();
+            
+            showStatus(`Removed: ${game.title}`, 'error');
+            updateUI();
+        };
+
+        sortGames.addEventListener('change', displayApprovedGames);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadFromStorage();
+        });
+    </script>
+</body>
+</html>
